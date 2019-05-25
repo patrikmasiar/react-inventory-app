@@ -1,0 +1,103 @@
+﻿type File @model {
+  contentType: String!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  name: String!
+  secret: String! @isUnique
+  size: Int!
+  updatedAt: DateTime!
+  url: String! @isUnique
+}
+
+type User @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  updatedAt: DateTime!
+  fullName: String!
+  company: Company @relation(name: "UserHasCompany")
+  role: UserRole! @relation(name: "UserHasRole")
+  email: String @isUnique
+  password: String
+  blocked: Boolean
+  inventories: [Inventory!]! @relation(name: "InventoryHasUsers")
+}
+
+type UserRole @model {
+  id: ID! @isUnique
+  role: String!
+  users: [User!]! @relation(name: "UserHasRole")
+}
+
+type Company @model {
+  id: ID! @isUnique
+  name: String!
+  ico: String
+  dic: String
+  icdph: String
+  users: [User!]! @relation(name: "UserHasCompany")
+  address: Address @relation(name: "CompanyHasAddress")
+  offices: [Office!]! @relation(name: "OfficeHasCompany")
+  officeRooms: [OfficeRoom!]! @relation(name: "CompanyHasOfficeRooms")
+  customers: [Customer!]! @relation(name: "CompanyHasCustomer")
+  inventories: [Inventory!]! @relation(name: "InventoryhasCompany")
+  blocked: Boolean
+}
+
+type Address @model {
+  id: ID! @isUnique
+  city: String
+  state: String
+  street: String
+  postCode: String
+  companies: [Company!]! @relation(name: "CompanyHasAddress")
+  offices: [Office!]! @relation(name: "OfficeHasAdress")
+}
+
+type Office @model {
+  id: ID! @isUnique
+  name: String!
+  address: Address @relation(name: "OfficeHasAdress")
+  company: Company @relation(name: "OfficeHasCompany")
+  officeRooms: [OfficeRoom!]! @relation(name: "OfficeRoomHasOffice")
+  inventories: [Inventory!]! @relation(name: "InventoryHasOffice")
+}
+
+type OfficeRoom @model {
+  id: ID! @isUnique
+  name: String!
+  tag: String!
+  office: Office @relation(name: "OfficeRoomHasOffice")
+  inventories: [Inventory!]! @relation(name: "InventoryHasOfficeRoom")
+  company: Company @relation(name: "CompanyHasOfficeRooms")
+}
+
+type Customer @model {
+  id: ID! @isUnique
+  fullName: String!
+  inventories: [Inventory!]! @relation(name: "InventoryHasCustomer")
+  properties: [Property!]! @relation(name: "CustomerHasProperty")
+  company: Company @relation(name: "CompanyHasCustomer")
+}
+
+type Inventory @model {
+  id: ID! @isUnique
+  description: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  office: Office @relation(name: "InventoryHasOffice")
+  officeRoom: OfficeRoom @relation(name: "InventoryHasOfficeRoom")
+  customer: Customer @relation(name: "InventoryHasCustomer")
+  users: [User!]! @relation(name: "InventoryHasUsers")
+  isAvailable: Boolean
+  isClosed: Boolean
+  company: Company @relation(name: "InventoryhasCompany")
+  property: Property @relation(name: "InventoryHasProperty")
+}
+
+type Property @model {
+  id: ID! @isUnique
+  title: String
+  count: Int
+  customer: Customer @relation(name: "CustomerHasProperty")
+  inventory: Inventory @relation(name: "InventoryHasProperty")
+}
