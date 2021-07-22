@@ -24,7 +24,7 @@
     "redux-form": "^7.1.2",
     "redux-persist": "^4.10.1",
     "redux-saga": "^0.16.0",
-    "xlsx": "^0.14.1",
+    "xlsx": "^0.17.0",
     "queries": "file:src/queries"
   },
   "scripts": {
